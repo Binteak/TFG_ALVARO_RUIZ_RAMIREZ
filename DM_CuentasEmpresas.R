@@ -1,5 +1,5 @@
 ##########################################################
-############## CARGAR PAQUETES Y LIBRER�AS ###############
+############## CARGAR PAQUETES Y LIBRERÍAS ###############
 ##########################################################
 install.packages("twitteR")
 install.packages("tm")
@@ -14,26 +14,27 @@ library(wordcloud)
 library(NLP)
 library(RColorBrewer)
 library(devtools)
-#########################################################
+########################################################################################################################################
 
 
 
 #################################################################
-############## TWITTER API PROCESO DE AUTORIZACI�N ##############
+############## TWITTER API PROCESO DE AUTORIZACIÓN ##############
 #################################################################
-consumer_key <- "FM6pxe9ZWgp3HbMrNdFhqybWz"
+consumer_key <-"FM6pxe9ZWgp3HbMrNdFhqybWz"
 consumer_secret <-"BsYDCXbGGMdsYj9ATviKxRTDIBW5yiB6sFbxVvl0Gq1HjNCiGm"
 access_token <-"836873536874688514-Bk0nSryswLvnQTUHsyBCW55a67HBsFk"
-access_secret <-	"3FUFzEp2iRIhgSylljeGSwgOq4VVcc5Si0SePr5xNtyDs"
+access_secret <-"3FUFzEp2iRIhgSylljeGSwgOq4VVcc5Si0SePr5xNtyDs"
 
 setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
-################################################################
+########################################################################################################################################
+
 
 
 #######################################################
 ############## RECOLECTAR TWEETS CUENTAS ##############
 #######################################################
-#Opci�n 1: Recolectar tweets desde cuenta de usuario en Twitter
+#Opción 1: Recolectar tweets desde cuenta de usuario en Twitter (aún no se que voy a pedirle hasta que no tenga el objetivo)
 #@VideojuegosGAME
 rdmTweets1 <- userTimeline("VideojuegosGAME", n=3200)
 (nDocs <- length(rdmTweets1))
@@ -61,7 +62,7 @@ rdmTweets8 <- userTimeline("NintendoES", n=3200)
 #@VayaVideojuegos
 rdmTweets9 <- userTimeline("VayaVideojuegos", n=3200)
 (nDocs <- length(rdmTweets9))
-#@A�adir m�s
+#@Añadir más
 
 rdmTweetsTotal <- c(rdmTweets1,
                     rdmTweets2,
@@ -72,38 +73,36 @@ rdmTweetsTotal <- c(rdmTweets1,
                     rdmTweets7,
                     rdmTweets8,
                     rdmTweets9)
-                  # A�adir m�s
-#######################################################
+                  # Añadir más
+########################################################################################################################################
 
 
 
 #############################################
 ############## CREAR DATAFRAME ##############
 #############################################
-
-#Crear el dataframe
 df = twListToDF(rdmTweetsTotal)
 df
 dim(df) #16 variables
 df$text
-#############################################
+########################################################################################################################################
 
 
 
 ##########################################
 ############## CREAR CORPUS ##############
 ##########################################
-# build a corpus, and specify the source to be character vectors
+#Construir el corpus y especificar la fuente es un vector de caracteres (Desde dataframe cojo unicamente "text")
 myCorpus <- Corpus(VectorSource(df$text))
 
 
-##############################MODIFICAR##########################################
+#Modificar, no se aun para que sirve exactamente
 # convert to lower case
 # tm v0.6
 myCorpus <- tm_map(myCorpus, content_transformer(tolower))
 # tm v0.5-10
 myCorpus <- tm_map(myCorpus, tolower)
-#################################################################################
+########################################################################################################################################
 
 
 #################################################
@@ -114,7 +113,7 @@ myCorpus <- tm_map(myCorpus, tolower)
 removerURL <- function(x) gsub("http[^[:space:]]*", "", x)
 myCorpus <- tm_map(myCorpus, content_transformer(removerURL))
 
-#REMOVER anything other than English letters or space
+#REMOVER cualquier otra cosa que tenga letras en ingles o espacios
 removeNumPunct <- function(x) gsub("[^[:alpha:][:space:]]*", "", x)
 myCorpus <- tm_map(myCorpus, content_transformer(removeNumPunct))
 
@@ -134,8 +133,8 @@ myStopwords <- c(stopwords(kind = "es"), "VideojuegosGAME",
                  "VideoJuegos4",
                  "NintendoES",
                  "VayaVideojuegos")
-                 #A�adir m�s"",
-myStopwords #se nos a�adir�n al final
+                 #Añadir más"",
+myStopwords #se nos añadirán al final
 
 
 #REMOVER determinantes y preposiciones
@@ -183,11 +182,13 @@ sum(unlist(minerCases))
 myCorpus <- tm_map(myCorpus, content_transformer(gsub),
                        + pattern = "miners", replacement = "mining")
 
-##################################################################################
+########################################################################################################################################
 
 
 
-
+###########################################################################
+############## CONSTRUCCIÓN MATRIZ DE DOCUMENTOS DE TERMINOS ##############
+###########################################################################
 
 #Construyendo Term-Document Matrix
 tdm <- TermDocumentMatrix(myCorpus, control=list(wordLengths=c(1,Inf)))
@@ -212,7 +213,7 @@ ggplot(df, aes(x=term, y=freq)) + geom_bar(stat="identity") + xlab("Terms") + yl
 library(tm)
 #Con r
 findAssocs(tdm, r, 0.25)
-###########################################################
+########################################################################################################################################
 
 
 
@@ -238,6 +239,7 @@ install_github("lchiffon/wordcloud2")
 library(wordcloud2)
 wordcloud2(data = df, color = 'random-dark', shape ='pentagon')
 wordcloud2
+########################################################################################################################################
 
 
 
@@ -254,16 +256,7 @@ kmeansResult <- kmeans(m_cluster, k)
 # cluster centers
 round(kmeansResult$centers, digits=3)
 
-
-
-
-
-
-
-
-
-
-
+####MEJORAR
 
 library(fpc)
 # partitioning around medoids with estimation of number of clusters
@@ -272,16 +265,18 @@ pamResult <- pamk(m3, metric="manhattan")
 (k <- pamResult$nc)
 
 pamResult <- pamResult$pamobject
-# print cluster medoids
+# BUCLE   que muestra todos los metodos
 for (i in 1:k) { 
   cat(paste("cluster", i, ": ")) cat(colnames(pamResult$medoids)[which(pamResult$medoids[i,]==1)], "\n")
     }
+########################################################################################################################################
 
 
 
+##################################################
+############## REGLAS DE ASOCIACIÓN ##############
+##################################################
 
 
-
-
-
+#ESCRIBIR CODIGO
 
