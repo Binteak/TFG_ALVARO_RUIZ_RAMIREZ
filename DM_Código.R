@@ -94,6 +94,16 @@ df$text
 
 
 
+###############################################
+############## LIMPIAR DATAFRAME ##############
+###############################################
+##ELIMINAR DUPLICADOS de un dataframe en R
+anyDuplicated(df$text) #número de fila donde se encuentran los duplicados
+unique(df$text)  #eliminamos los duplicados
+########################################################################################################################################
+
+
+
 ##########################################
 ############## CREAR CORPUS ##############
 ##########################################
@@ -113,10 +123,6 @@ myCorpus <- tm_map(myCorpus, tolower)
 #################################################
 ############## LIMPIEZA DEL CORPUS ##############
 #################################################
-
-##ELIMINAR DUPLICADOS de un dataframe en R
-anyDuplicated(myCorpus) #número de fila donde se encuentran los duplicados
-unique(myCorpus)  #eliminamos los duplicados
 
 #REMOVER URLs
 removerURL <- function(x) gsub("http[^[:space:]]*", "", x)
