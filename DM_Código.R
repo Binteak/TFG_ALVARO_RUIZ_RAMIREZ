@@ -148,6 +148,8 @@ myStopwords2 <- c("el","la","los","las","les","un","uno","una","unos","unas","al
 "dos","tres",
 "the",
 "a","ante","bajo","cabe","con","contra","de","desde","durante","en","entre","hacia","hasta","mediante","para","por","segun","sin","so","sobre","tras","versus","via")
+#es igual a lo de antes
+myStopwords2 <- read.table (file = "Determ_Prep_SW.txt", header = TRUE, row.names = 1, sep = "\t", dec = ".")
 
 
 #REMOVER mis stopwords EN Corpus
