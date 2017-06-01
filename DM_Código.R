@@ -159,6 +159,7 @@ myStopwords2 <- c("el","la","los","las","les","un","uno","una","unos","unas","al
 "dos","tres",
 "the",
 "a","ante","bajo","cabe","con","contra","de","desde","durante","en","entre","hacia","hasta","mediante","para","por","segun","sin","so","sobre","tras","versus","via")
+
 #es igual a lo de antes
 myStopwords2 <- read.table (file = "Determ_Prep_SW.txt", header = TRUE, row.names = 1, sep = "\t", dec = ".")
 
@@ -172,7 +173,7 @@ tm_map(myCorpus, removeWords(the))
 
 
 
-        ################modificar                                         
+        ################modificar (lo encontré pero no se aún exactamente para lo que sirve                                        
 #Stemming Words
 # keep a copy of corpus to use later as a dictionary for stem completion
 myCorpusCopy <- myCorpus
