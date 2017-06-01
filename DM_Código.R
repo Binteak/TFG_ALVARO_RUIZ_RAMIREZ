@@ -34,7 +34,7 @@ setup_twitter_oauth(consumer_key, consumer_secret, access_token, access_secret)
 #######################################################
 ############## RECOLECTAR TWEETS CUENTAS ##############
 #######################################################
-#Opción 1: Recolectar tweets desde cuenta de usuario en Twitter (aún no se que voy a pedirle hasta que no tenga el objetivo)
+#Opción 1: QUE DICE LA COMPETENCIA. Recolectar tweets desde cuenta de usuario en Twitter (aún no se que voy a pedirle hasta que no tenga el objetivo)
 #@VideojuegosGAME
 rdmTweets1 <- userTimeline("VideojuegosGAME", n=3200)
 (nDocs <- length(rdmTweets1))
@@ -74,6 +74,11 @@ rdmTweetsTotal <- c(rdmTweets1,
                     rdmTweets8,
                     rdmTweets9)
                   # Añadir más
+
+
+#Opción 2:
+#Opción 3:
+#Opción X:
 ########################################################################################################################################
 
 
