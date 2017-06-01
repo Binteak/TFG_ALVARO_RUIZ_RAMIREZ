@@ -1,5 +1,5 @@
 ##########################################################
-############## CARGAR PAQUETES Y LIBRERÍAS ###############
+############## CARGAR PAQUETES Y LIBRERÍAS ############### (Previos)
 ##########################################################
 install.packages("twitteR")
 install.packages("tm")
@@ -132,7 +132,7 @@ myCorpus <- tm_map(myCorpus, content_transformer(removerURL))
 removeNumPunct <- function(x) gsub("[^[:alpha:][:space:]]*", "", x)
 myCorpus <- tm_map(myCorpus, content_transformer(removeNumPunct))
 
-#PASAR A UTF-8 ASCII
+#PASAR A UTF-8 ASCII (me falta)
 
 #REMOVER signos de puntuacion #usar este codigo con todos los demas
 removeSigPunt <- function(x) gsub("[[:punct:]]*", "", x)
@@ -222,12 +222,14 @@ findFreqTerms(tdm, lowfreq=100)
 
 termFrequency <- rowSums(as.matrix(tdm))
 termFrequency <- subset(termFrequency, termFrequency>=100)
+
+#Mostrar en grafico
 install.packages("ggplot2")
 library(ggplot2)
 df <- data.frame(term=names(termFrequency), freq=termFrequency)
 ggplot(df, aes(x=term, y=freq)) + geom_bar(stat="identity") + xlab("Terms") + ylab("Count") + coord_flip()
 
-#Encontrar asociaciones###################no funciona
+#Encontrar asociaciones###################no funciona ?
 library(tm)
 #Con r
 findAssocs(tdm, r, 0.25)
