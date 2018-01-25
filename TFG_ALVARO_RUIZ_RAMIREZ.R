@@ -1,15 +1,15 @@
 ####################################################################
 #                                                                  #
-# Title: "Data Mining in Social Networks for SMEs" Using Rstudio." #
+# Title: "Data Mining in Social Networks for SMEs Using Rstudio."  #
 #                                                                  #
-#   Author: ¡lvaro Ruiz RamÌrez                                    #
+#   Author: √Ålvaro Ruiz Ram√≠rez                                    #
 #                                                                  #
 #   Creation Date:      2017-10-17                                 #
 #   Last Update:        2018-01-23                                 #
 #                                                                  #
 #   R version: 1.1.383                                             #
 ####################################################################
-#PAQUETES Y LIBRERIAS---------------
+#PAQUETES Y LIBRERIAS--------------------------------------------------------------------------------------------------------------------
 install.packages("ROAuth")
 install.packages("RCurl")
 install.packages("twitteR")
@@ -23,6 +23,7 @@ install.packages("tm")
 install.packages("httpuv")
 install.packages("base64enc")
 install.packages("qdap")
+
 library(ROAuth)
 library(RCurl)
 library(twitteR)
@@ -37,22 +38,23 @@ library(httpuv)
 library(base64enc)
 library(qdap)
 
-#PROCESO DE AUTENTICACION Y CONEXION CON TWITTER API-------------------------------------------------------------------------------
+#PROCESO DE AUTENTICACION Y CONEXION CON TWITTER API------------------------------------------------------------------------------------
+#Tokens
 api_key = "idOcb1eJaACX9fL175f0xQrsx"
 api_secret = "Op2u8I5ODrrExzhbznaDE3ayrxTWQoMiIc0LDsZXz6dMSxJSfw"
 access_token = "209639864-JiSUHNtyiPwmPstNbj3509ddIlN8nMUx7BOYzzGk"
 access_token_secret = "mn1i4yZrU9EBPuuuLqqaCIg1YWDiWjHmD0kwUM8N4NVtK"
 
-# Set SSL certs globally
+#Certificaciones SSL
 options(RCurlOptions = list(cainfo = system.file('CurlSSL', 'cacert.pem', package = 'RCurl')))
 
-# set up the URLs
+#Urls
 reqURL = 'https://api.twitter.com/oauth/request_token'
 accessURL = 'https://api.twitter.com/oauth/access_token'
 authURL = 'https://api.twitter.com/oauth/authorize'
 
+#Credenciales
 cred_twitter = OAuthFactory$new(consumerKey = api_key, consumerSecret = api_secret, requestURL = reqURL, accessURL = accessURL, authURL = authURL)
-
 cred_twitter$handshake(cainfo = system.file('CurlSSL', 'cacert.pem', package = 'RCurl'))
 
 api_key = "idOcb1eJaACX9fL175f0xQrsx"
@@ -60,19 +62,18 @@ api_secret = "Op2u8I5ODrrExzhbznaDE3ayrxTWQoMiIc0LDsZXz6dMSxJSfw"
 access_token = "209639864-JiSUHNtyiPwmPstNbj3509ddIlN8nMUx7BOYzzGk"
 access_token_secret = "mn1i4yZrU9EBPuuuLqqaCIg1YWDiWjHmD0kwUM8N4NVtK"
 
-setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
+setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret) #Realizar autenticaci√≥n
 
-
-#DIRECTORIO DE TRABAJO-------------------------------------------------------------------
-setwd("C:/Users/Asus/Google Drive/TRABAJO FIN DE GRADO")
+#DIRECTORIO DE TRABAJO-------------------------------------------------------------------------------------------------------------------
+setwd("C:/Users/Asus/Google Drive/TRABAJO FIN DE GRADO") #Todos los archivos estar√°n en esta direcci√≥n
 getwd()
 
-
-#RECOLECTAR TWEETS CUENTAS------------------------------------------------------------------------------
+#RECOLECTAR TWEETS CUENTAS---------------------------------------------------------------------------------------------------------------
 # Cuentas_Twitter <- read.csv("Cuentas_Twitter.csv",header=T)
 # Cuentas_Twitter <- as.character(Cuentas_Twitter[,1])
+# Problema al realizar el bucle "formato S4"para todas las cuentas en una sola linea
 
-#VI—AROCK
+#VI√ëAROCK
 X1 <- userTimeline("VinaRockOficial", n=3200)
 (nDocs <- length(X1))
 #PRIMAVERA SOUND
@@ -163,31 +164,29 @@ X29 <- userTimeline("Muzikalia", n=3200)
 #INDIENAUTA
 X30 <- userTimeline("Indienauta", n=3200)
 (nDocs <- length(X30))
-
 #31 cuentas
-class(X_total)
-X_total = c(X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17,X18,X19,X20,X21,X22,X23,X24,X25,X26,X27,X28,X29,X30)
 
+tweets = c(X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17,X18,X19,X20,X21,X22,X23,X24,X25,X26,X27,X28,X29,X30)
+class(tweets)
 
 #CREAR DATAFRAME INICIAL------------------------------------------------------------------------------------------
 
-    #LONGITUD
-    tweets <- X_total
-    length.tweets <- length(tweets)
-    length.tweets
+    #Longitud
+    length_tweets <- length(tweets)
+    length_tweets
 
-    #GUARDAMOS TABLON INICIAL SIN LIMPAR
-    tweets.df <- ldply(tweets, function(t) t$toDataFrame())
-    write.csv(tweets.df, "Tweets_Sin_Transformar.csv")                   
+    #Guardar tweets sin limpiar (iniciales)
+    tweets_df <- ldply(tweets, function(t) t$toDataFrame())
+    write.csv(tweets_df, "Tweets_Sin_Transformar.csv")  
+                       
     #Obtener el texto
     tweets_txt = sapply(tweets, function(x) x$getText()) #obtenemos el texto
     tweets_txt
 
-
 #---------------------------------------------------------TEXTO @'S---------------------------------------------------------   
 #                                                                                                                          #
-#----Guardar los perfiles m·s activos--------------------------------------------------------------------------------------#
-#----Contar el n˙mero de veces que aparecen--------------------------------------------------------------------------------#
+#----Guardar los perfiles m√°s activos--------------------------------------------------------------------------------------#
+#----Contar el n√∫mero de veces que aparecen--------------------------------------------------------------------------------#
 #----Crear tabla-----------------------------------------------------------------------------------------------------------#    
    
     arrobas = regmatches(tweets_txt,gregexpr("@(\\d|\\w)+",tweets_txt))
@@ -196,10 +195,11 @@ X_total = c(X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17,X18,X19,X
     df_arrobas = ordered(table(df_arrobas))
     length(df_arrobas)
     
-    library("qdap")
+    require("qdap")
     arrobas_frec <- freq_terms(arrobas, 150)
     arrobas_frec = arrobas_frec[3:nrow(arrobas_frec),]
     arrobas_frec = arrobas_frec[which(nchar(arrobas_frec$WORD) > 3 & arrobas_frec$FREQ[] >= 10),]
+                        
     for(i in 1:length(arrobas_frec$WORD)){
       arrobas_frec$WORD[i] = paste0("@",arrobas_frec$WORD[i])
     }
@@ -211,20 +211,17 @@ X_total = c(X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17,X18,X19,X
     ggplot(arrobas_frec, aes(Frecuencia_arr, Palabras_arr)) + 
       geom_line(linetype = 4) +
       labs(y="Cuentas") + 
-      labs(x="Frecuencia de ApariciÛn") + 
+      labs(x="Frecuencia de Aparici√≥n") + 
       labs(title=paste0("@'s FRECUENTES: ",nrow(arrobas_frec)))+
-      labs(caption="                     De: ¡lvaro Ruiz RamÌrez")  +
+      labs(caption="                     De: √Ålvaro Ruiz Ram√≠rez")  +
       geom_point(aes(colour = Frecuencia)) 
  
-    
-      arrobas_imp= arrobas_frec[which(arrobas_frec$FREQ[] >= 10),]
-      
-
-    
+    arrobas_imp= arrobas_frec[which(arrobas_frec$FREQ[] >= 10),] #aquellos que al menos aparezcan 10 veces
+         
 #---------------------------------------------------------TEXTO #'S---------------------------------------------------------   
 #                                                                                                                          #
-#----Guardar los hastags m·s usados----------------------------------------------------------------------------------------#
-#----Contar el n˙mero de veces que aparecen--------------------------------------------------------------------------------#
+#----Guardar los hastags m√°s usados----------------------------------------------------------------------------------------#
+#----Contar el n√∫mero de veces que aparecen--------------------------------------------------------------------------------#
 #----Crear tabla-----------------------------------------------------------------------------------------------------------#  
     
     hastags = regmatches(tweets_txt,gregexpr("#(\\d|\\w)+",tweets_txt))
@@ -238,7 +235,6 @@ X_total = c(X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17,X18,X19,X
     
     for(i in 1:length(hastags_frec$WORD)){
       hastags_frec$WORD[i] = paste0("#",hastags_frec$WORD[i])
-    
     }
     
    hastags_frec$FREQ = sort(hastags_frec$FREQ, decreasing=TRUE)
@@ -246,27 +242,23 @@ X_total = c(X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17,X18,X19,X
     Palabras_h = hastags_frec$WORD
     Frecuencia_h = hastags_frec$FREQ
     Frecuencia = Frecuencia_h
+    
     ggplot(hastags_frec, aes(Frecuencia_h, Palabras_h)) + 
       geom_line(linetype = 4) +
       labs(y="Hastags") + 
-      labs(x="Frecuencia de ApariciÛn") + 
+      labs(x="Frecuencia de Aparici√≥n") + 
       labs(title=paste0("#HASTAGS FRECUENTES: ",nrow(hastags_frec)))+
-      labs(caption="                     De: ¡lvaro Ruiz RamÌrez")  +
+      labs(caption="                     De: √Ålvaro Ruiz Ram√≠rez")  +
       geom_point(aes(colour = Frecuencia)) 
       geom_smooth(method="lm", se=F)
     
       hastags_factor = factor(hastags_frec$WORD)
     
-    hastags_imp= hastags_frec[which(hastags_frec$FREQ[] >= 10),]
-    
-
-    
-    
-#---------------------------------------------------------TEXTO PALABRAS-------------------------------------------------------------------------------------    
-#LIMPIAR DATAFRAME PALABRAS----------------------------------------------------------------------------------------------------------------------------------
-
-#install.packages("tmap")
-#library(tmap)
+    hastags_imp = hastags_frec[which(hastags_frec$FREQ[] >= 10),] #aquellos que aparezcan al menos 10 veces
+       
+#---------------------------------------------------------TEXTO PALABRAS-----------------------------------------------------------------    
+#LIMPIAR DATAFRAME PALABRAS--------------------------------------------------------------------------------------------------------------
+require(tmap)
 some_txt1 = tweets_txt
 #remover RTs
 some_txt1 = gsub("(RT|via)((?:\\b\\W*@\\w+)+)", "", some_txt)
@@ -299,7 +291,7 @@ some_txt11 =gsub("[ |\t]{2,}", "", some_txt10)
 some_txt12 =gsub("^ ", "", some_txt11)
 #quitar espacios en blanco al final
 some_txt13 =gsub(" $", "", some_txt12)
-#cambiar de mayusculas a min˙sculas
+#cambiar de mayusculas a min√∫sculas
 some_txt14 = gsub("/", "", some_txt13)
 some_txt14 = as.list(tolower(some_txt14)) 
 #remover letras chinas
@@ -309,34 +301,30 @@ some_txt15 = iconv(some_txt15, "latin1", "ASCII", sub="")
 some_txt16 =gsub("^ ", "", some_txt15)
 #quitar espacios en blanco al final
 some_txt17 =gsub(" $", "", some_txt16)
-#remover filas que estÈn vacÌas
+#remover filas que est√©n vac√≠as
 l = length(some_txt17)
+l
+                        
+write.csv(some_txt17, "Tweets_Transformados.csv") #guardamos tweets limpiados
 
-
-write.csv(some_txt17, "Tweets_Transformados.csv")
-
-
-
-
-#CREAR CORPUS------------------------------------------------------------------------------------------------------------------------------------------------
+#CREAR CORPUS---------------------------------------------------------------------------------------------------------------------------
 require(tm)
+                        
 some_txt18 = Corpus(VectorSource(some_txt17))
 head(some_txt18)
 
-#LIMPIEZA DE STOPWORDS-----------------------
+#LIMPIEZA DE STOPWORDS------------------------------------------------------------------------------------------------------------------
 some_txt19 = tm_map(some_txt18, removeWords, (stopwords("english")))
 swspa = (stopwords("spanish"))
-swspa_sin = chartr('·ÈÌÛ˙Ò','aeioun',swspa)
+swspa_sin = chartr('√°√©√≠√≥√∫√±','aeioun',swspa)
 some_txt20 = tm_map(some_txt19, removeWords, swspa_sin)
 some_txt20 = tm_map(some_txt20, removeWords, stopwords("catala"))
 some_txt21 = tm_map(some_txt20, stripWhitespace)
 
 lon = length(some_txt21)
-for(i in 1:lon) {
-  
+for(i in 1:lon) { 
   print(strwrap(some_txt21[[i]]))
 }
-
 strwrap(some_txt21[[60]])
 
 #crear y cargar el archivo desde csv
@@ -346,11 +334,11 @@ SW_Det_Prep <- as.character(SW_Det_Prep[,1])
 SW_Otras <- read.csv("SW_Otras.csv",header=T)
 SW_Otras <- as.character(SW_Otras[,1])
 
-#REMOVER mis stopwords EN Corpus
+#Remover mis stopwords EN Corpus
 some_txt22 <- tm_map(some_txt21, removeWords, SW_Det_Prep)
 some_txt22 <- tm_map(some_txt22, removewords, SW_Otras)
 
-#TERMINOS FRECUENTES PARA PALABRAS---------------------------------------------------------------------------------------------------------------------------
+#TERMINOS FRECUENTES PARA PALABRAS------------------------------------------------------------------------------------------------------
 install.packages("qdap")
 library("qdap")
 term_count <- freq_terms(some_txt22, 20)
@@ -364,15 +352,14 @@ Frecuencia = Frecuencia_p
 ggplot(term_count, aes(Frecuencia_p, Palabras_p)) + 
   geom_line(linetype = 4) +
   labs(y="Cuentas") + 
-  labs(x="Frecuencia de ApariciÛn") + 
+  labs(x="Frecuencia de Aparici√≥n") + 
   labs(title=paste0("Palabras FRECUENTES: ",length(Frecuencia_p)))+
-  labs(caption="                     De: ¡lvaro Ruiz RamÌrez")  +
+  labs(caption="                     De: √Ålvaro Ruiz Ram√≠rez")  +
   geom_point(aes(colour = Frecuencia)) 
 
+term_count_imp= term_count[which(term_count$FREQ[] >= 10),] #aquellos que aparezcan al menos 10 veces
 
-term_count_imp= term_count[which(term_count$FREQ[] >= 10),]
-
-#TERMINOS FRECUENTES CON TM------------------------------------------------------------------------
+#TERMINOS FRECUENTES CON TM-------------------------------------------------------------------------------------------------------------
 some_txt_tdm = TermDocumentMatrix(some_txt22)
 some_txt_tdm
 some_txt_m = as.matrix(some_txt_tdm)
@@ -382,11 +369,10 @@ some_txt_m[100:140, 200]
 #frecuencia de terminos por veces que aparecen fila a fila
 term_frec = rowSums(some_txt_m)
 
-#en orden descendente(de m·s a menos)
+#en orden descendente(de m√°s a menos)
 term_frec = sort(term_frec, decreasing = T)
 
-#palabras m·s comunes
-
+#palabras m√°s comunes
 term_frec [1:200]
 
 str(term_frec)
@@ -395,7 +381,7 @@ l = length(term_frec)
 Cantidad = as.numeric(term_frec)
 Palabras = names(term_frec)
 
-#WORDCLOUD------------------------------------------------------------------------------------------
-library(ggplot2)
+#WORDCLOUD------------------------------------------------------------------------------------------------------------------------------
+require(ggplot2)
 wordcloud(some_txt22, min.freq = 5, max.words = 150, width = 1000, height = 1000, random.order = FALSE, rot.per=.15, colors = brewer.pal(4, "Dark2")) #color = pal
-+ labs(caption="                     De: ¡lvaro Ruiz RamÌrez")
++ labs(caption="                     De: √Ålvaro Ruiz Ram√≠rez")
