@@ -39,11 +39,7 @@ library(base64enc)
 library(qdap)
 
 #PROCESO DE AUTENTICACION Y CONEXION CON TWITTER API------------------------------------------------------------------------------------
-#Tokens
-api_key = "idOcb1eJaACX9fL175f0xQrsx"
-api_secret = "Op2u8I5ODrrExzhbznaDE3ayrxTWQoMiIc0LDsZXz6dMSxJSfw"
-access_token = "209639864-JiSUHNtyiPwmPstNbj3509ddIlN8nMUx7BOYzzGk"
-access_token_secret = "mn1i4yZrU9EBPuuuLqqaCIg1YWDiWjHmD0kwUM8N4NVtK"
+
 
 #Certificaciones SSL
 options(RCurlOptions = list(cainfo = system.file('CurlSSL', 'cacert.pem', package = 'RCurl')))
@@ -57,6 +53,7 @@ authURL = 'https://api.twitter.com/oauth/authorize'
 cred_twitter = OAuthFactory$new(consumerKey = api_key, consumerSecret = api_secret, requestURL = reqURL, accessURL = accessURL, authURL = authURL)
 cred_twitter$handshake(cainfo = system.file('CurlSSL', 'cacert.pem', package = 'RCurl'))
 
+#Tokens
 api_key = "idOcb1eJaACX9fL175f0xQrsx"
 api_secret = "Op2u8I5ODrrExzhbznaDE3ayrxTWQoMiIc0LDsZXz6dMSxJSfw"
 access_token = "209639864-JiSUHNtyiPwmPstNbj3509ddIlN8nMUx7BOYzzGk"
